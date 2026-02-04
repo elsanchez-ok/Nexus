@@ -1,35 +1,890 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Nexus Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Chat - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #0a0e17;
+            --secondary: #151b29;
+            --accent-blue: #00a8ff;
+            --accent-purple: #9c27b0;
+            --accent-cyan: #00d4ff;
+            --accent-red: #ff4757;
+            --accent-green: #0be881;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8d0;
+            --border: #1e2438;
+            --card-bg: rgba(21, 27, 41, 0.9);
+            --gamer-gradient: linear-gradient(135deg, #0a0e17 0%, #151b29 30%, #1a1f3a 100%);
+            --neon-glow: 0 0 10px rgba(0, 168, 255, 0.7), 0 0 20px rgba(0, 168, 255, 0.5), 0 0 30px rgba(0, 168, 255, 0.3);
+            --neon-purple-glow: 0 0 10px rgba(156, 39, 176, 0.7), 0 0 20px rgba(156, 39, 176, 0.5), 0 0 30px rgba(156, 39, 176, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0a0e17;
-            color: white;
-            font-family: Arial;
+            background: var(--gamer-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fondo animado con partículas */
+        .particles-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 5s infinite ease-in-out;
+        }
+
+        .star.small {
+            width: 1px;
+            height: 1px;
+        }
+
+        .star.medium {
+            width: 2px;
+            height: 2px;
+        }
+
+        .star.large {
+            width: 3px;
+            height: 3px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        /* Contenedor principal */
+        .login-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 35px;
+            border: 1px solid var(--border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+        }
+
+        .login-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(0, 168, 255, 0.1), transparent 50%),
+                        radial-gradient(circle at bottom left, rgba(156, 39, 176, 0.1), transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Logo */
+        .logo-container {
             text-align: center;
-            padding: 50px;
+            margin-bottom: 30px;
+        }
+
+        .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, var(--accent-blue), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--neon-glow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .logo-placeholder:hover {
+            transform: scale(1.05);
+            box-shadow: var(--neon-purple-glow);
+        }
+
+        .logo-placeholder img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .logo-placeholder .default-logo {
+            font-size: 40px;
+            font-weight: 800;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .app-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .app-tagline {
+            color: var(--text-secondary);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        /* Formulario */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-label i {
+            margin-right: 8px;
+            color: var(--accent-blue);
+        }
+
+        .form-input {
+            background: rgba(10, 14, 23, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: var(--neon-glow);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Botón de Google */
+        .google-btn {
+            background: rgba(10, 14, 23, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .google-btn:hover {
+            background: rgba(21, 27, 41, 0.9);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .google-btn i {
+            color: #4285F4;
+            font-size: 20px;
+        }
+
+        /* Botón de enviar */
+        .submit-btn {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            border: none;
+            border-radius: 10px;
+            padding: 17px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 255, 0.6);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Opciones adicionales */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .remember-me input[type="checkbox"] {
+            accent-color: var(--accent-blue);
+        }
+
+        .forgot-password {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+        }
+
+        /* Separador */
+        .separator {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-secondary);
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border), transparent);
+        }
+
+        .separator span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        /* Enlace de registro */
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .register-link a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Configuración de logo personalizable */
+        .logo-config {
+            background: rgba(10, 14, 23, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 25px;
+            border: 1px dashed var(--border);
+        }
+
+        .logo-config-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-config-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logo-url-input {
+            flex: 1;
+            background: rgba(21, 27, 41, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .logo-url-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .logo-update-btn {
+            background: var(--accent-blue);
+            border: none;
+            border-radius: 8px;
+            padding: 0 15px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logo-update-btn:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* Mensajes de validación */
+        .validation-message {
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .validation-message.error {
+            color: var(--accent-red);
+            display: block;
+        }
+
+        .validation-message.success {
+            color: var(--accent-green);
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 30px 25px;
+            }
+
+            .app-name {
+                font-size: 28px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 25px 20px;
+            }
+
+            .app-name {
+                font-size: 24px;
+            }
+
+            .logo-placeholder {
+                width: 80px;
+                height: 80px;
+            }
+
+            .logo-placeholder .default-logo {
+                font-size: 32px;
+            }
+
+            .logo-config-input {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>¡Bienvenido a Nexus!</h1>
-    <p>Tu sesión está activa.</p>
-    <button onclick="logout()">Cerrar sesión</button>
-    
+    <!-- Fondo animado con estrellas y partículas -->
+    <div class="particles-background" id="particlesBackground"></div>
+
+    <!-- Contenedor principal del login -->
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="logo-container">
+                <div class="logo-placeholder" id="logoContainer">
+                    <!-- El logo se carga aquí, por defecto muestra "N" -->
+                    <div class="default-logo">N</div>
+                </div>
+                <h1 class="app-name">NEXUS CHAT</h1>
+                <p class="app-tagline">Mensajería profesional para gamers</p>
+            </div>
+
+            <!-- Formulario de login -->
+            <form class="login-form" id="loginForm">
+                <!-- Login con Google -->
+                <button type="button" class="google-btn" id="googleLoginBtn">
+                    <i class="fab fa-google"></i>
+                    Iniciar sesión con Google
+                </button>
+
+                <div class="separator">
+                    <span>O continúa con</span>
+                </div>
+
+                <!-- Campo de nombre de usuario -->
+                <div class="form-group">
+                    <label class="form-label" for="username">
+                        <i class="fas fa-user"></i> Nombre de usuario
+                    </label>
+                    <input type="text" id="username" class="form-input" placeholder="Ingresa tu nombre de usuario" required>
+                    <div class="validation-message" id="usernameValidation"></div>
+                </div>
+
+                <!-- Campo de contraseña -->
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input type="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
+                    <div class="validation-message" id="passwordValidation"></div>
+                </div>
+
+                <!-- Opciones adicionales -->
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        Recordarme
+                    </label>
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- Botón de enviar -->
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-rocket"></i> INICIAR SESIÓN
+                </button>
+            </form>
+
+            <!-- Configuración de logo personalizable -->
+            <div class="logo-config">
+                <div class="logo-config-title">
+                    <i class="fas fa-image"></i> Configura tu logo (opcional)
+                </div>
+                <div class="logo-config-input">
+                    <input type="url" class="logo-url-input" id="logoUrlInput" placeholder="Pega aquí el enlace de tu imagen">
+                    <button class="logo-update-btn" id="logoUpdateBtn">Actualizar</button>
+                </div>
+            </div>
+
+            <!-- Enlace de registro -->
+            <div class="register-link">
+                ¿No tienes una cuenta? <a href="#" id="registerLink">Regístrate ahora</a>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
-        document.body.innerHTML = `
-            <h1>¡Bienvenido ${user.name}!</h1>
-            <p>Email: ${user.email}</p>
-            <p>Proveedor: ${user.provider}</p>
-            <button onclick="logout()">Cerrar sesión</button>
-        `;
-        
-        function logout() {
-            localStorage.removeItem('nexus_user');
-            window.location.href = "index.html";
+        // Variables de estado
+        let logoUrl = '';
+        let isAuthenticated = false;
+
+        // Crear fondo animado con estrellas y partículas
+        function createAnimatedBackground() {
+            const container = document.getElementById('particlesBackground');
+            
+            // Crear estrellas
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Tamaño aleatorio
+                const sizes = ['small', 'medium', 'large'];
+                star.classList.add(sizes[Math.floor(Math.random() * sizes.length)]);
+                
+                // Posición aleatoria
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // Opacidad aleatoria
+                star.style.opacity = `${Math.random() * 0.7 + 0.3}`;
+                
+                // Color aleatorio (azul, cian, blanco)
+                const colors = ['#00a8ff', '#00d4ff', '#ffffff'];
+                star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Animación aleatoria
+                star.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(star);
+            }
+            
+            // Crear partículas flotantes
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Tamaño aleatorio
+                const size = Math.random() * 4 + 1;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Posición aleatoria
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Color aleatorio
+                const hue = Math.random() * 30 + 210; // Entre 210 (azul) y 240 (púrpura)
+                particle.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
+                
+                // Animación
+                const duration = Math.random() * 20 + 10;
+                particle.style.animation = `float ${duration}s infinite ease-in-out`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(particle);
+            }
         }
+
+        // Validación del formulario
+        function validateForm() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            let isValid = true;
+            
+            // Validar nombre de usuario
+            const usernameValidation = document.getElementById('usernameValidation');
+            if (username.length < 3) {
+                usernameValidation.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+                usernameValidation.className = 'validation-message error';
+                isValid = false;
+            } else if (username.length > 20) {
+                usernameValidation.textContent = 'El nombre de usuario no puede tener más de 20 caracteres';
+                usernameValidation.className = 'validation-message error';
+                isValid = false;
+            } else {
+                usernameValidation.className = 'validation-message success';
+                usernameValidation.textContent = 'Nombre de usuario válido';
+            }
+            
+            // Validar contraseña
+            const passwordValidation = document.getElementById('passwordValidation');
+            if (password.length < 6) {
+                passwordValidation.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                passwordValidation.className = 'validation-message error';
+                isValid = false;
+            } else {
+                passwordValidation.className = 'validation-message success';
+                passwordValidation.textContent = 'Contraseña válida';
+            }
+            
+            return isValid;
+        }
+
+        // Actualizar el logo con la URL proporcionada
+        function updateLogo() {
+            const logoContainer = document.getElementById('logoContainer');
+            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
+            
+            if (!logoUrlInput) {
+                // Restaurar logo por defecto
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+                logoUrl = '';
+                return;
+            }
+            
+            // Verificar si la URL es válida (solo comprobación básica)
+            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
+                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
+                return;
+            }
+            
+            // Intentar cargar la imagen
+            const img = new Image();
+            img.onload = function() {
+                // La imagen se cargó correctamente
+                logoContainer.innerHTML = '';
+                logoContainer.appendChild(img);
+                logoUrl = logoUrlInput;
+                
+                // Mostrar mensaje de éxito
+                alert('Logo actualizado correctamente');
+            };
+            
+            img.onerror = function() {
+                // Error al cargar la imagen
+                alert('No se pudo cargar la imagen desde la URL proporcionada. Verifica que sea una URL de imagen válida.');
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+                logoUrl = '';
+            };
+            
+            img.src = logoUrlInput;
+            img.style.width = '70%';
+            img.style.height = '70%';
+            img.style.objectFit = 'contain';
+            img.style.borderRadius = '10px';
+        }
+
+        // Simular autenticación con Google
+        function googleLogin() {
+            // En un caso real, aquí integrarías con la API de Google OAuth
+            // Por ahora, simulamos el proceso
+            
+            const googleBtn = document.getElementById('googleLoginBtn');
+            const originalText = googleBtn.innerHTML;
+            
+            // Mostrar estado de carga
+            googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando con Google...';
+            googleBtn.disabled = true;
+            
+            // Simular tiempo de conexión
+            setTimeout(() => {
+                // Simular autenticación exitosa
+                isAuthenticated = true;
+                
+                // Mostrar mensaje de éxito
+                googleBtn.innerHTML = '<i class="fas fa-check"></i> ¡Autenticado con Google!';
+                googleBtn.style.background = 'linear-gradient(to right, #0be881, #0ac870)';
+                googleBtn.style.borderColor = '#0be881';
+                
+                // Redirigir después de un momento (simulación)
+                setTimeout(() => {
+                    alert('¡Inicio de sesión exitoso! Redirigiendo al dashboard...');
+                    // En un caso real, aquí redirigirías al dashboard
+                    // window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 1500);
+        }
+
+        // Simular autenticación tradicional
+        function traditionalLogin(username, password, rememberMe) {
+            // En un caso real, aquí enviarías los datos al servidor
+            // Por ahora, simulamos el proceso
+            
+            // Mostrar estado de carga en el botón de enviar
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFICANDO...';
+            submitBtn.disabled = true;
+            
+            // Simular tiempo de verificación
+            setTimeout(() => {
+                // Simular autenticación exitosa
+                isAuthenticated = true;
+                
+                // Mostrar mensaje de éxito
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡ACCESO CONCEDIDO!';
+                submitBtn.style.background = 'linear-gradient(to right, #0be881, #0ac870)';
+                
+                // Guardar en localStorage si se seleccionó "Recordarme"
+                if (rememberMe) {
+                    localStorage.setItem('nexus_username', username);
+                    localStorage.setItem('nexus_rememberMe', 'true');
+                } else {
+                    localStorage.removeItem('nexus_username');
+                    localStorage.removeItem('nexus_rememberMe');
+                }
+                
+                // Redirigir después de un momento (simulación)
+                setTimeout(() => {
+                    alert(`¡Bienvenido ${username}! Redirigiendo al dashboard...`);
+                    // En un caso real, aquí redirigirías al dashboard
+                    // window.location.href = 'dashboard.html';
+                }, 1000);
+            }, 2000);
+        }
+
+        // Inicializar la aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Crear fondo animado
+            createAnimatedBackground();
+            
+            // Cargar datos guardados si existen
+            const savedUsername = localStorage.getItem('nexus_username');
+            const savedRememberMe = localStorage.getItem('nexus_rememberMe');
+            
+            if (savedUsername && savedRememberMe === 'true') {
+                document.getElementById('username').value = savedUsername;
+                document.getElementById('rememberMe').checked = true;
+            }
+            
+            // Configurar el evento del formulario
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value;
+                    const rememberMe = document.getElementById('rememberMe').checked;
+                    
+                    traditionalLogin(username, password, rememberMe);
+                }
+            });
+            
+            // Configurar botón de Google
+            document.getElementById('googleLoginBtn').addEventListener('click', googleLogin);
+            
+            // Configurar actualización de logo
+            document.getElementById('logoUpdateBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                updateLogo();
+            });
+            
+            // También permitir actualizar con Enter en el input del logo
+            document.getElementById('logoUrlInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    updateLogo();
+                }
+            });
+            
+            // Configurar enlace de registro (simulación)
+            document.getElementById('registerLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Función de registro - En una implementación real, esto redirigiría a la página de registro.');
+            });
+            
+            // Configurar enlace de "olvidé contraseña" (simulación)
+            document.querySelector('.forgot-password').addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = prompt('Por favor, ingresa tu correo electrónico para recuperar tu contraseña:');
+                if (email) {
+                    alert(`Se ha enviado un enlace de recuperación a: ${email}\n\n(Esta es una simulación. En una implementación real, se enviaría un correo real.)`);
+                }
+            });
+            
+            // Validación en tiempo real
+            document.getElementById('username').addEventListener('input', function() {
+                const username = this.value.trim();
+                const validation = document.getElementById('usernameValidation');
+                
+                if (username.length > 0 && username.length < 3) {
+                    validation.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+                    validation.className = 'validation-message error';
+                } else if (username.length > 20) {
+                    validation.textContent = 'El nombre de usuario no puede tener más de 20 caracteres';
+                    validation.className = 'validation-message error';
+                } else if (username.length >= 3 && username.length <= 20) {
+                    validation.textContent = 'Nombre de usuario válido';
+                    validation.className = 'validation-message success';
+                } else {
+                    validation.textContent = '';
+                    validation.className = 'validation-message';
+                }
+            });
+            
+            document.getElementById('password').addEventListener('input', function() {
+                const password = this.value;
+                const validation = document.getElementById('passwordValidation');
+                
+                if (password.length > 0 && password.length < 6) {
+                    validation.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                    validation.className = 'validation-message error';
+                } else if (password.length >= 6) {
+                    validation.textContent = 'Contraseña válida';
+                    validation.className = 'validation-message success';
+                } else {
+                    validation.textContent = '';
+                    validation.className = 'validation-message';
+                }
+            });
+            
+            // Efectos de hover para mejor experiencia
+            const interactiveElements = document.querySelectorAll('.form-input, .google-btn, .submit-btn, .logo-update-btn');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                el.addEventListener('focus', function() {
+                    this.style.transition = 'all 0.3s ease';
+                });
+            });
+            
+            // Mostrar información sobre el login funcional
+            console.log('Login 100% funcional listo');
+            console.log('Características:');
+            console.log('- Validación en tiempo real de usuario y contraseña');
+            console.log('- Simulación de login con Google');
+            console.log('- Simulación de login tradicional');
+            console.log('- Opción "Recordarme" con localStorage');
+            console.log('- Fondo animado con estrellas y partículas');
+            console.log('- Logo personalizable con URL');
+            console.log('- Diseño completamente responsive');
+        });
     </script>
 </body>
 </html>

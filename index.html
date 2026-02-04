@@ -6,6 +6,8 @@
     <title>Nexus | InfiniHon TECH - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Auth0 SDK -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <style>
         :root {
             --primary: #0a0e17;
@@ -268,6 +270,33 @@
             font-size: 20px;
         }
 
+        /* Botón de Auth0 Login */
+        .auth0-btn {
+            background: linear-gradient(to right, #eb5424, #ff7b4a);
+            border: none;
+            border-radius: 10px;
+            padding: 17px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(235, 84, 36, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth0-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(235, 84, 36, 0.6);
+            background: linear-gradient(to right, #ff7b4a, #eb5424);
+        }
+
         /* Botón de enviar */
         .submit-btn {
             background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
@@ -280,7 +309,7 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 3s;
             margin-top: 10px;
             box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
         }
@@ -435,6 +464,83 @@
             display: block;
         }
 
+        /* Dashboard styles */
+        .dashboard-container {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .user-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 3px solid var(--accent-blue);
+            box-shadow: var(--neon-glow);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            font-size: 24px;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 10px;
+            color: var(--accent-cyan);
+        }
+
+        .user-email {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            background: var(--accent-red);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ff2e43;
+            transform: translateY(-2px);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 168, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-blue);
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .login-card {
@@ -449,6 +555,10 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 10px;
+            }
+
+            .user-card {
+                padding: 20px;
             }
         }
 
@@ -480,13 +590,12 @@
     <!-- Fondo animado con estrellas y partículas -->
     <div class="particles-background" id="particlesBackground"></div>
 
-    <!-- Contenedor principal del login -->
-    <div class="login-container">
+    <!-- Contenedor del login -->
+    <div class="login-container" id="loginContainer">
         <div class="login-card">
             <!-- Logo -->
             <div class="logo-container">
                 <div class="logo-placeholder" id="logoContainer">
-                    <!-- El logo se carga aquí, por defecto muestra "N" -->
                     <div class="default-logo">N</div>
                 </div>
                 <h1 class="app-name">NEXUS</h1>
@@ -494,25 +603,34 @@
                 <p class="app-tagline">VERSION BETA 1.0.0</p>
             </div>
 
+            <!-- Loading spinner -->
+            <div class="spinner" id="loadingSpinner"></div>
+
             <!-- Formulario de login -->
             <form class="login-form" id="loginForm">
-                <!-- Login con Google -->
-                <button type="button" class="google-btn" id="googleLoginBtn">
-                    <i class="fab fa-google"></i>
-                    Iniciar sesión con Google
+                <!-- Botón Auth0 Login -->
+                <button type="button" class="auth0-btn" id="auth0LoginBtn">
+                    <i class="fas fa-shield-alt"></i>
+                    INICIAR SESIÓN CON AUTH0
                 </button>
 
                 <div class="separator">
                     <span>O continúa con</span>
                 </div>
 
-                <!-- Campo de nombre de usuario -->
+                <!-- Botón de Google -->
+                <button type="button" class="google-btn" id="googleLoginBtn">
+                    <i class="fab fa-google"></i>
+                    Google
+                </button>
+
+                <!-- Campo de email -->
                 <div class="form-group">
-                    <label class="form-label" for="username">
-                        <i class="fas fa-user"></i> Nombre de usuario
+                    <label class="form-label" for="email">
+                        <i class="fas fa-envelope"></i> Correo electrónico
                     </label>
-                    <input type="text" id="username" class="form-input" placeholder="Ingresa tu nombre de usuario" required>
-                    <div class="validation-message" id="usernameValidation"></div>
+                    <input type="email" id="email" class="form-input" placeholder="tucorreo@ejemplo.com" required>
+                    <div class="validation-message" id="emailValidation"></div>
                 </div>
 
                 <!-- Campo de contraseña -->
@@ -530,7 +648,7 @@
                         <input type="checkbox" id="rememberMe">
                         Recordarme
                     </label>
-                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    <a href="#" class="forgot-password" id="forgotPassword">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <!-- Botón de enviar -->
@@ -557,60 +675,226 @@
         </div>
     </div>
 
-    <script>
-        // Variables de estado
-        let logoUrl = '';
-        let isAuthenticated = false;
+    <!-- Dashboard después del login -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="user-card">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <div class="default-logo">N</div>
+                </div>
+                <h1 class="app-name">NEXUS DASHBOARD</h1>
+                <p class="app-tagline">Bienvenido a tu panel de control</p>
+            </div>
+            
+            <div class="user-avatar" id="userAvatar">
+                <img src="" alt="Avatar" id="avatarImage">
+            </div>
+            
+            <h2 class="user-name" id="userName">Cargando...</h2>
+            <p class="user-email" id="userEmail">cargando@ejemplo.com</p>
+            
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                Sesión iniciada exitosamente con Auth0
+            </p>
+            
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
+            </button>
+        </div>
+    </div>
 
-        // Crear fondo animado con estrellas y partículas
+    <script>
+        // Configuración de Auth0
+        const auth0Config = {
+            // ⚠️ REEMPLAZA ESTOS VALORES CON LOS TUYOS
+            domain: "nexus-chat.us.auth0.com",  // Tu dominio de Auth0
+            clientId: "5l8XLbrInGAb8HvL5hkYIiip40UJsC9K",      // Tu Client ID de Auth0
+            redirectUri: window.location.origin, // URL de redirección
+            audience: "https://dev-tudominio.auth0.com/api/v2/",
+            scope: "openid profile email"
+        };
+
+        // Variable global para Auth0
+        let auth0Client = null;
+
+        // Inicializar Auth0
+        async function initAuth0() {
+            try {
+                auth0Client = await createAuth0Client({
+                    domain: auth0Config.domain,
+                    client_id: auth0Config.clientId,
+                    redirect_uri: auth0Config.redirectUri,
+                    audience: auth0Config.audience,
+                    scope: auth0Config.scope
+                });
+
+                // Verificar si ya está autenticado
+                const isAuthenticated = await auth0Client.isAuthenticated();
+                
+                if (isAuthenticated) {
+                    // Mostrar dashboard
+                    showDashboard();
+                    await updateUserProfile();
+                } else {
+                    // Verificar si hay código de callback
+                    const query = window.location.search;
+                    if (query.includes("code=") && query.includes("state=")) {
+                        // Procesar callback de Auth0
+                        await auth0Client.handleRedirectCallback();
+                        window.history.replaceState({}, document.title, "/");
+                        showDashboard();
+                        await updateUserProfile();
+                    }
+                }
+            } catch (error) {
+                console.error("Error inicializando Auth0:", error);
+                alert("Error de configuración. Verifica tus credenciales de Auth0.");
+            }
+        }
+
+        // Login con Auth0
+        async function loginWithAuth0() {
+            try {
+                showLoading(true);
+                await auth0Client.loginWithRedirect({
+                    redirect_uri: auth0Config.redirectUri
+                });
+            } catch (error) {
+                console.error("Error en login:", error);
+                showLoading(false);
+                alert("Error al iniciar sesión. Intenta de nuevo.");
+            }
+        }
+
+        // Logout
+        async function logout() {
+            try {
+                showLoading(true);
+                await auth0Client.logout({
+                    returnTo: window.location.origin
+                });
+            } catch (error) {
+                console.error("Error en logout:", error);
+                showLoading(false);
+            }
+        }
+
+        // Obtener información del usuario
+        async function getUserProfile() {
+            try {
+                return await auth0Client.getUser();
+            } catch (error) {
+                console.error("Error obteniendo perfil:", error);
+                return null;
+            }
+        }
+
+        // Actualizar la UI con información del usuario
+        async function updateUserProfile() {
+            const user = await getUserProfile();
+            
+            if (user) {
+                document.getElementById('userName').textContent = user.name || user.nickname || "Usuario";
+                document.getElementById('userEmail').textContent = user.email || "No disponible";
+                
+                // Actualizar avatar si existe
+                const avatarImage = document.getElementById('avatarImage');
+                if (user.picture) {
+                    avatarImage.src = user.picture;
+                    avatarImage.style.display = "block";
+                } else {
+                    avatarImage.style.display = "none";
+                }
+            }
+        }
+
+        // Mostrar dashboard
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            showLoading(false);
+        }
+
+        // Mostrar login
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            showLoading(false);
+        }
+
+        // Mostrar/ocultar loading
+        function showLoading(show) {
+            document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+        }
+
+        // Login con email/password (simulado para demo)
+        async function loginWithEmail(email, password) {
+            showLoading(true);
+            
+            // Simulación de delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // En producción, esto usaría la API de Auth0
+            // auth0Client.loginWithPassword({email, password});
+            
+            // Para demo, creamos un usuario simulado
+            const mockUser = {
+                name: email.split('@')[0],
+                email: email,
+                picture: null
+            };
+            
+            // Guardar en localStorage para simular sesión
+            localStorage.setItem('nexus_auth0_user', JSON.stringify(mockUser));
+            
+            showDashboard();
+            updateMockProfile(mockUser);
+            showLoading(false);
+            
+            alert(`¡Bienvenido ${mockUser.name}! (Modo demo - En producción usaría Auth0 real)`);
+        }
+
+        // Perfil simulado
+        function updateMockProfile(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userEmail').textContent = user.email;
+        }
+
+        // Crear fondo animado
         function createAnimatedBackground() {
             const container = document.getElementById('particlesBackground');
             
-            // Crear estrellas
             for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
                 
-                // Tamaño aleatorio
                 const sizes = ['small', 'medium', 'large'];
                 star.classList.add(sizes[Math.floor(Math.random() * sizes.length)]);
                 
-                // Posición aleatoria
                 star.style.left = `${Math.random() * 100}%`;
                 star.style.top = `${Math.random() * 100}%`;
-                
-                // Opacidad aleatoria
                 star.style.opacity = `${Math.random() * 0.7 + 0.3}`;
                 
-                // Color aleatorio (azul, cian, blanco)
                 const colors = ['#00a8ff', '#00d4ff', '#ffffff'];
                 star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Animación aleatoria
                 star.style.animationDelay = `${Math.random() * 5}s`;
                 
                 container.appendChild(star);
             }
             
-            // Crear partículas flotantes
             for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Tamaño aleatorio
                 const size = Math.random() * 4 + 1;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                
-                // Posición aleatoria
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
                 
-                // Color aleatorio
-                const hue = Math.random() * 30 + 210; // Entre 210 (azul) y 240 (púrpura)
+                const hue = Math.random() * 30 + 210;
                 particle.style.backgroundColor = `hsl(${hue}, 100%, 70%)`;
                 
-                // Animación
                 const duration = Math.random() * 20 + 10;
                 particle.style.animation = `float ${duration}s infinite ease-in-out`;
                 particle.style.animationDelay = `${Math.random() * 5}s`;
@@ -619,28 +903,58 @@
             }
         }
 
-        // Validación del formulario
+        // Actualizar logo
+        function updateLogo() {
+            const logoContainer = document.getElementById('logoContainer');
+            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
+            
+            if (!logoUrlInput) {
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+                return;
+            }
+            
+            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
+                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
+                return;
+            }
+            
+            const img = new Image();
+            img.onload = function() {
+                logoContainer.innerHTML = '';
+                logoContainer.appendChild(img);
+                img.style.width = '70%';
+                img.style.height = '70%';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '10px';
+                alert('Logo actualizado correctamente');
+            };
+            
+            img.onerror = function() {
+                alert('No se pudo cargar la imagen desde la URL proporcionada.');
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+            };
+            
+            img.src = logoUrlInput;
+        }
+
+        // Validación de formulario
         function validateForm() {
-            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             let isValid = true;
             
-            // Validar nombre de usuario
-            const usernameValidation = document.getElementById('usernameValidation');
-            if (username.length < 3) {
-                usernameValidation.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
-                usernameValidation.className = 'validation-message error';
-                isValid = false;
-            } else if (username.length > 20) {
-                usernameValidation.textContent = 'El nombre de usuario no puede tener más de 20 caracteres';
-                usernameValidation.className = 'validation-message error';
+            const emailValidation = document.getElementById('emailValidation');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                emailValidation.textContent = 'Por favor, ingresa un email válido';
+                emailValidation.className = 'validation-message error';
                 isValid = false;
             } else {
-                usernameValidation.className = 'validation-message success';
-                usernameValidation.textContent = 'Nombre de usuario válido';
+                emailValidation.className = 'validation-message success';
+                emailValidation.textContent = 'Email válido';
             }
             
-            // Validar contraseña
             const passwordValidation = document.getElementById('passwordValidation');
             if (password.length < 6) {
                 passwordValidation.textContent = 'La contraseña debe tener al menos 6 caracteres';
@@ -654,157 +968,47 @@
             return isValid;
         }
 
-        // Actualizar el logo con la URL proporcionada
-        function updateLogo() {
-            const logoContainer = document.getElementById('logoContainer');
-            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
-            
-            if (!logoUrlInput) {
-                // Restaurar logo por defecto
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-                logoUrl = '';
-                return;
-            }
-            
-            // Verificar si la URL es válida (solo comprobación básica)
-            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
-                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
-                return;
-            }
-            
-            // Intentar cargar la imagen
-            const img = new Image();
-            img.onload = function() {
-                // La imagen se cargó correctamente
-                logoContainer.innerHTML = '';
-                logoContainer.appendChild(img);
-                logoUrl = logoUrlInput;
-                
-                // Mostrar mensaje de éxito
-                alert('Logo actualizado correctamente');
-            };
-            
-            img.onerror = function() {
-                // Error al cargar la imagen
-                alert('No se pudo cargar la imagen desde la URL proporcionada. Verifica que sea una URL de imagen válida.');
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-                logoUrl = '';
-            };
-            
-            img.src = logoUrlInput;
-            img.style.width = '70%';
-            img.style.height = '70%';
-            img.style.objectFit = 'contain';
-            img.style.borderRadius = '10px';
-        }
-
-        // Simular autenticación con Google
-        function googleLogin() {
-            // En un caso real, aquí integrarías con la API de Google OAuth
-            // Por ahora, simulamos el proceso
-            
-            const googleBtn = document.getElementById('googleLoginBtn');
-            const originalText = googleBtn.innerHTML;
-            
-            // Mostrar estado de carga
-            googleBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando con Google...';
-            googleBtn.disabled = true;
-            
-            // Simular tiempo de conexión
-            setTimeout(() => {
-                // Simular autenticación exitosa
-                isAuthenticated = true;
-                
-                // Mostrar mensaje de éxito
-                googleBtn.innerHTML = '<i class="fas fa-check"></i> ¡Autenticado con Google!';
-                googleBtn.style.background = 'linear-gradient(to right, #0be881, #0ac870)';
-                googleBtn.style.borderColor = '#0be881';
-                
-                // Redirigir después de un momento (simulación)
-                setTimeout(() => {
-                    alert('¡Inicio de sesión exitoso! Redirigiendo al dashboard...');
-                    // En un caso real, aquí redirigirías al dashboard
-                    // window.location.href = 'dashboard.html';
-                }, 1000);
-            }, 1500);
-        }
-
-        // Simular autenticación tradicional
-        function traditionalLogin(username, password, rememberMe) {
-            // En un caso real, aquí enviarías los datos al servidor
-            // Por ahora, simulamos el proceso
-            
-            // Mostrar estado de carga en el botón de enviar
-            const submitBtn = document.querySelector('.submit-btn');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VERIFICANDO...';
-            submitBtn.disabled = true;
-            
-            // Simular tiempo de verificación
-            setTimeout(() => {
-                // Simular autenticación exitosa
-                isAuthenticated = true;
-                
-                // Mostrar mensaje de éxito
-                submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡ACCESO CONCEDIDO!';
-                submitBtn.style.background = 'linear-gradient(to right, #0be881, #0ac870)';
-                
-                // Guardar en localStorage si se seleccionó "Recordarme"
-                if (rememberMe) {
-                    localStorage.setItem('nexus_username', username);
-                    localStorage.setItem('nexus_rememberMe', 'true');
-                } else {
-                    localStorage.removeItem('nexus_username');
-                    localStorage.removeItem('nexus_rememberMe');
-                }
-                
-                // Redirigir después de un momento (simulación)
-                setTimeout(() => {
-                    alert(`¡Bienvenido ${username}! Redirigiendo al dashboard...`);
-                    // En un caso real, aquí redirigirías al dashboard
-                    // window.location.href = 'dashboard.html';
-                }, 1000);
-            }, 2000);
-        }
-
-        // Inicializar la aplicación
-        document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', async function() {
             // Crear fondo animado
             createAnimatedBackground();
             
-            // Cargar datos guardados si existen
-            const savedUsername = localStorage.getItem('nexus_username');
-            const savedRememberMe = localStorage.getItem('nexus_rememberMe');
+            // Inicializar Auth0
+            await initAuth0();
             
-            if (savedUsername && savedRememberMe === 'true') {
-                document.getElementById('username').value = savedUsername;
-                document.getElementById('rememberMe').checked = true;
+            // Cargar datos guardados
+            const savedUser = localStorage.getItem('nexus_auth0_user');
+            if (savedUser && !auth0Client) {
+                const user = JSON.parse(savedUser);
+                showDashboard();
+                updateMockProfile(user);
             }
             
-            // Configurar el evento del formulario
+            // Configurar eventos
+            document.getElementById('auth0LoginBtn').addEventListener('click', loginWithAuth0);
+            
+            document.getElementById('googleLoginBtn').addEventListener('click', function() {
+                // Para Google, usamos Auth0 también
+                loginWithAuth0();
+            });
+            
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 if (validateForm()) {
-                    const username = document.getElementById('username').value.trim();
+                    const email = document.getElementById('email').value.trim();
                     const password = document.getElementById('password').value;
                     const rememberMe = document.getElementById('rememberMe').checked;
                     
-                    traditionalLogin(username, password, rememberMe);
+                    loginWithEmail(email, password);
                 }
             });
             
-            // Configurar botón de Google
-            document.getElementById('googleLoginBtn').addEventListener('click', googleLogin);
-            
-            // Configurar actualización de logo
             document.getElementById('logoUpdateBtn').addEventListener('click', function(e) {
                 e.preventDefault();
                 updateLogo();
             });
             
-            // También permitir actualizar con Enter en el input del logo
             document.getElementById('logoUrlInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -812,34 +1016,39 @@
                 }
             });
             
-            // Configurar enlace de registro (simulación)
             document.getElementById('registerLink').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Función de registro - En una implementación real, esto redirigiría a la página de registro.');
+                alert('Redirigiendo a registro de Auth0...');
+                loginWithAuth0();
             });
             
-            // Configurar enlace de "olvidé contraseña" (simulación)
-            document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            document.getElementById('forgotPassword').addEventListener('click', function(e) {
                 e.preventDefault();
-                const email = prompt('Por favor, ingresa tu correo electrónico para recuperar tu contraseña:');
-                if (email) {
-                    alert(`Se ha enviado un enlace de recuperación a: ${email}\n\n(Esta es una simulación. En una implementación real, se enviaría un correo real.)`);
+                alert('Funcionalidad de recuperación de contraseña - Se abriría el flujo de Auth0');
+                // En producción: auth0Client.passwordlessStart({...})
+            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                if (auth0Client) {
+                    await logout();
+                } else {
+                    // Modo demo
+                    localStorage.removeItem('nexus_auth0_user');
+                    showLogin();
                 }
             });
             
             // Validación en tiempo real
-            document.getElementById('username').addEventListener('input', function() {
-                const username = this.value.trim();
-                const validation = document.getElementById('usernameValidation');
+            document.getElementById('email').addEventListener('input', function() {
+                const email = this.value.trim();
+                const validation = document.getElementById('emailValidation');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 
-                if (username.length > 0 && username.length < 3) {
-                    validation.textContent = 'El nombre de usuario debe tener al menos 3 caracteres';
+                if (email.length > 0 && !emailRegex.test(email)) {
+                    validation.textContent = 'Por favor, ingresa un email válido';
                     validation.className = 'validation-message error';
-                } else if (username.length > 20) {
-                    validation.textContent = 'El nombre de usuario no puede tener más de 20 caracteres';
-                    validation.className = 'validation-message error';
-                } else if (username.length >= 3 && username.length <= 20) {
-                    validation.textContent = 'Nombre de usuario válido';
+                } else if (email.length > 0 && emailRegex.test(email)) {
+                    validation.textContent = 'Email válido';
                     validation.className = 'validation-message success';
                 } else {
                     validation.textContent = '';
@@ -863,29 +1072,44 @@
                 }
             });
             
-            // Efectos de hover para mejor experiencia
-            const interactiveElements = document.querySelectorAll('.form-input, .google-btn, .submit-btn, .logo-update-btn');
-            interactiveElements.forEach(el => {
-                el.addEventListener('mouseenter', function() {
-                    this.style.transition = 'all 0.3s ease';
-                });
-                
-                el.addEventListener('focus', function() {
-                    this.style.transition = 'all 0.3s ease';
-                });
-            });
-            
-            // Mostrar información sobre el login funcional
-            console.log('Login 100% funcional listo');
-            console.log('Características:');
-            console.log('- Validación en tiempo real de usuario y contraseña');
-            console.log('- Simulación de login con Google');
-            console.log('- Simulación de login tradicional');
-            console.log('- Opción "Recordarme" con localStorage');
-            console.log('- Fondo animado con estrellas y partículas');
-            console.log('- Logo personalizable con URL');
-            console.log('- Diseño completamente responsive');
+            console.log('✅ Nexus Login con Auth0 listo');
+            console.log('⚠️  Recuerda configurar tus credenciales de Auth0 en auth0Config');
         });
+
+        // Configuración guiada de Auth0
+        function showAuth0SetupGuide() {
+            console.log(`
+🎯 GUÍA PARA CONFIGURAR AUTH0:
+
+1. Ve a https://auth0.com y crea una cuenta GRATIS
+
+2. En el dashboard de Auth0:
+   - Crea un nuevo "Application" → "Single Page Web Application"
+   - Nombre: "Nexus Chat"
+
+3. Configura los settings:
+   - Allowed Callback URLs: ${window.location.origin}
+   - Allowed Logout URLs: ${window.location.origin}
+   - Allowed Web Origins: ${window.location.origin}
+
+4. Copia estos valores:
+   - Domain → Reemplaza en auth0Config.domain
+   - Client ID → Reemplaza en auth0Config.clientId
+
+5. En "Connections" → "Social":
+   - Activa Google, GitHub, etc.
+
+6. En "Connections" → "Database":
+   - Activa "Username-Password-Authentication"
+
+7. ¡Listo! Tu login funcionará con Auth0 real.
+            `);
+            
+            alert("Consulta la consola (F12) para ver la guía completa de configuración de Auth0");
+        }
+
+        // Mostrar guía al cargar
+        setTimeout(showAuth0SetupGuide, 2000);
     </script>
 </body>
 </html>

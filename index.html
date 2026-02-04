@@ -6,8 +6,8 @@
     <title>Nexus | InfiniHon TECH - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Auth0 SDK -->
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <!-- Auth0 SDK para GitHub Pages -->
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
     <style>
         :root {
             --primary: #0a0e17;
@@ -241,6 +241,33 @@
             color: var(--text-secondary);
         }
 
+        /* Botón de Auth0 Login */
+        .auth0-btn {
+            background: linear-gradient(to right, #eb5424, #ff7b4a);
+            border: none;
+            border-radius: 10px;
+            padding: 17px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(235, 84, 36, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .auth0-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(235, 84, 36, 0.6);
+            background: linear-gradient(to right, #ff7b4a, #eb5424);
+        }
+
         /* Botón de Google */
         .google-btn {
             background: rgba(10, 14, 23, 0.8);
@@ -270,33 +297,6 @@
             font-size: 20px;
         }
 
-        /* Botón de Auth0 Login */
-        .auth0-btn {
-            background: linear-gradient(to right, #eb5424, #ff7b4a);
-            border: none;
-            border-radius: 10px;
-            padding: 17px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(235, 84, 36, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .auth0-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(235, 84, 36, 0.6);
-            background: linear-gradient(to right, #ff7b4a, #eb5424);
-        }
-
         /* Botón de enviar */
         .submit-btn {
             background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
@@ -309,7 +309,7 @@
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: all 3s;
+            transition: all 0.3s;
             margin-top: 10px;
             box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
         }
@@ -573,7 +573,7 @@
 
             .logo-placeholder {
                 width: 80px;
-                height: 80px;
+            height: 80px;
             }
 
             .logo-placeholder .default-logo {
@@ -704,22 +704,47 @@
     </div>
 
     <script>
-        // Configuración de Auth0
+        // ============================================
+        // CONFIGURACIÓN AUTH0 PARA GITHUB PAGES
+        // ============================================
+        
+        // Configuración CORREGIDA para GitHub Pages
         const auth0Config = {
-            // ⚠️ REEMPLAZA ESTOS VALORES CON LOS TUYOS
-            domain: "nexus-chat.us.auth0.com",  // Tu dominio de Auth0
-            clientId: "5l8XLbrInGAb8HvL5hkYIiip40UJsC9K",      // Tu Client ID de Auth0
-            redirectUri: window.location.origin, // URL de redirección
-            audience: "https://nexus-chat.us.auth0.com/api/v2/",
+            domain: "nexus-chat.us.auth0.com",                     // Tu dominio de Auth0
+            clientId: "5l8XLbrInGAb8HvL5hkYIiip40UJsC9K",          // Tu Client ID
+            redirectUri: "https://elsanchez-ok.github.io",         // URL EXACTA de GitHub Pages
+            audience: "https://nexus-chat.us.auth0.com/api/v2/",   // Mismo dominio
             scope: "openid profile email"
         };
 
-        // Variable global para Auth0
+        console.log("🔍 Configuración Auth0 cargada:");
+        console.log("- Dominio:", auth0Config.domain);
+        console.log("- Client ID:", auth0Config.clientId ? "✅ OK" : "❌ Faltante");
+        console.log("- Redirect URI:", auth0Config.redirectUri);
+
+        // Variables globales
         let auth0Client = null;
+        let auth0Initialized = false;
+
+        // ============================================
+        // FUNCIONES PRINCIPALES
+        // ============================================
 
         // Inicializar Auth0
-        async function initAuth0() {
+        async function initializeAuth0() {
+            console.log("🚀 Inicializando Auth0...");
+            
             try {
+                // Verificar si el SDK de Auth0 está disponible
+                if (typeof createAuth0Client === 'undefined') {
+                    console.error("❌ SDK de Auth0 no cargado. Verifica:");
+                    console.error("1. La CDN está bloqueada");
+                    console.error("2. Conexión a internet");
+                    console.error("3. Usando versión 2.1 del SDK");
+                    throw new Error("SDK de Auth0 no disponible");
+                }
+
+                // Crear cliente Auth0
                 auth0Client = await createAuth0Client({
                     domain: auth0Config.domain,
                     client_id: auth0Config.clientId,
@@ -728,85 +753,107 @@
                     scope: auth0Config.scope
                 });
 
+                console.log("✅ Auth0 inicializado correctamente");
+                auth0Initialized = true;
+
+                // Verificar autenticación
+                await handleAuthentication();
+
+            } catch (error) {
+                console.error("❌ Error inicializando Auth0:", error);
+                console.log("🔄 Usando modo DEMO temporal");
+                showDemoWarning();
+                auth0Initialized = false;
+            }
+        }
+
+        // Manejar autenticación
+        async function handleAuthentication() {
+            try {
                 // Verificar si ya está autenticado
                 const isAuthenticated = await auth0Client.isAuthenticated();
-                
+                console.log("🔐 Usuario autenticado:", isAuthenticated);
+
                 if (isAuthenticated) {
+                    // Obtener información del usuario
+                    const user = await auth0Client.getUser();
+                    console.log("👤 Usuario:", user);
+                    
                     // Mostrar dashboard
                     showDashboard();
-                    await updateUserProfile();
-                } else {
-                    // Verificar si hay código de callback
-                    const query = window.location.search;
-                    if (query.includes("code=") && query.includes("state=")) {
-                        // Procesar callback de Auth0
-                        await auth0Client.handleRedirectCallback();
-                        window.history.replaceState({}, document.title, "/");
-                        showDashboard();
-                        await updateUserProfile();
-                    }
+                    updateUserProfile(user);
+                    return;
                 }
+
+                // Verificar si hay código de callback (después del redirect)
+                const query = window.location.search;
+                if (query.includes("code=") && query.includes("state=")) {
+                    console.log("🔄 Procesando callback de Auth0...");
+                    
+                    // Manejar el callback
+                    await auth0Client.handleRedirectCallback();
+                    
+                    // Limpiar URL
+                    window.history.replaceState({}, document.title, "/");
+                    
+                    // Obtener usuario
+                    const user = await auth0Client.getUser();
+                    
+                    // Mostrar dashboard
+                    showDashboard();
+                    updateUserProfile(user);
+                }
+
             } catch (error) {
-                console.error("Error inicializando Auth0:", error);
-                alert("Error de configuración. Verifica tus credenciales de Auth0.");
+                console.error("❌ Error en autenticación:", error);
             }
         }
 
         // Login con Auth0
         async function loginWithAuth0() {
+            if (!auth0Initialized) {
+                console.log("⚠️  Auth0 no inicializado. Usando modo DEMO.");
+                loginWithDemo();
+                return;
+            }
+
             try {
+                console.log("🔑 Iniciando login con Auth0...");
                 showLoading(true);
+                
                 await auth0Client.loginWithRedirect({
                     redirect_uri: auth0Config.redirectUri
                 });
+                
             } catch (error) {
-                console.error("Error en login:", error);
+                console.error("❌ Error en login:", error);
                 showLoading(false);
-                alert("Error al iniciar sesión. Intenta de nuevo.");
+                alert("Error al iniciar sesión. Verifica la consola (F12).");
             }
         }
 
         // Logout
         async function logout() {
-            try {
-                showLoading(true);
-                await auth0Client.logout({
-                    returnTo: window.location.origin
-                });
-            } catch (error) {
-                console.error("Error en logout:", error);
-                showLoading(false);
-            }
-        }
-
-        // Obtener información del usuario
-        async function getUserProfile() {
-            try {
-                return await auth0Client.getUser();
-            } catch (error) {
-                console.error("Error obteniendo perfil:", error);
-                return null;
-            }
-        }
-
-        // Actualizar la UI con información del usuario
-        async function updateUserProfile() {
-            const user = await getUserProfile();
-            
-            if (user) {
-                document.getElementById('userName').textContent = user.name || user.nickname || "Usuario";
-                document.getElementById('userEmail').textContent = user.email || "No disponible";
-                
-                // Actualizar avatar si existe
-                const avatarImage = document.getElementById('avatarImage');
-                if (user.picture) {
-                    avatarImage.src = user.picture;
-                    avatarImage.style.display = "block";
-                } else {
-                    avatarImage.style.display = "none";
+            if (auth0Initialized && auth0Client) {
+                try {
+                    showLoading(true);
+                    await auth0Client.logout({
+                        returnTo: auth0Config.redirectUri
+                    });
+                } catch (error) {
+                    console.error("Error en logout:", error);
+                    showLoading(false);
                 }
+            } else {
+                // Modo demo - limpiar localStorage
+                localStorage.removeItem('nexus_demo_user');
+                showLogin();
             }
         }
+
+        // ============================================
+        // FUNCIONES DE UI
+        // ============================================
 
         // Mostrar dashboard
         function showDashboard() {
@@ -827,43 +874,68 @@
             document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
         }
 
-        // Login con email/password (simulado para demo)
-        async function loginWithEmail(email, password) {
-            showLoading(true);
+        // Actualizar perfil del usuario
+        function updateUserProfile(user) {
+            if (!user) return;
             
-            // Simulación de delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            document.getElementById('userName').textContent = user.name || user.nickname || "Usuario";
+            document.getElementById('userEmail').textContent = user.email || "No disponible";
             
-            // En producción, esto usaría la API de Auth0
-            // auth0Client.loginWithPassword({email, password});
-            
-            // Para demo, creamos un usuario simulado
-            const mockUser = {
-                name: email.split('@')[0],
-                email: email,
-                picture: null
-            };
-            
-            // Guardar en localStorage para simular sesión
-            localStorage.setItem('nexus_auth0_user', JSON.stringify(mockUser));
-            
-            showDashboard();
-            updateMockProfile(mockUser);
-            showLoading(false);
-            
-            alert(`¡Bienvenido ${mockUser.name}! (Modo demo - En producción usaría Auth0 real)`);
+            // Actualizar avatar si existe
+            const avatarImage = document.getElementById('avatarImage');
+            if (user.picture) {
+                avatarImage.src = user.picture;
+                avatarImage.style.display = "block";
+            } else {
+                avatarImage.style.display = "none";
+            }
         }
 
-        // Perfil simulado
-        function updateMockProfile(user) {
-            document.getElementById('userName').textContent = user.name;
-            document.getElementById('userEmail').textContent = user.email;
+        // ============================================
+        // MODO DEMO (fallback)
+        // ============================================
+
+        function loginWithDemo() {
+            showLoading(true);
+            
+            setTimeout(() => {
+                const demoUser = {
+                    name: "Usuario Demo",
+                    email: "demo@nexus.com",
+                    picture: null
+                };
+                
+                // Guardar en localStorage
+                localStorage.setItem('nexus_demo_user', JSON.stringify(demoUser));
+                
+                // Mostrar dashboard
+                showDashboard();
+                updateUserProfile(demoUser);
+                showLoading(false);
+                
+                alert("🎮 Modo DEMO activado\n\nPara usar Auth0 real:\n1. Verifica tu dominio en Auth0\n2. Configura las URLs de callback\n3. Recarga la página");
+            }, 1000);
         }
+
+        function showDemoWarning() {
+            console.warn("⚠️  AUTH0 EN MODO DEMO");
+            console.warn("Para usar Auth0 real:");
+            console.warn("1. Ve a manage.auth0.com");
+            console.warn("2. Configura las URLs:");
+            console.warn("   - Callback: " + auth0Config.redirectUri);
+            console.warn("   - Logout: " + auth0Config.redirectUri);
+            console.warn("   - Origins: " + auth0Config.redirectUri);
+        }
+
+        // ============================================
+        // FUNCIONES AUXILIARES
+        // ============================================
 
         // Crear fondo animado
         function createAnimatedBackground() {
             const container = document.getElementById('particlesBackground');
             
+            // Crear estrellas
             for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
@@ -882,6 +954,7 @@
                 container.appendChild(star);
             }
             
+            // Crear partículas
             for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
@@ -901,40 +974,6 @@
                 
                 container.appendChild(particle);
             }
-        }
-
-        // Actualizar logo
-        function updateLogo() {
-            const logoContainer = document.getElementById('logoContainer');
-            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
-            
-            if (!logoUrlInput) {
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-                return;
-            }
-            
-            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
-                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
-                return;
-            }
-            
-            const img = new Image();
-            img.onload = function() {
-                logoContainer.innerHTML = '';
-                logoContainer.appendChild(img);
-                img.style.width = '70%';
-                img.style.height = '70%';
-                img.style.objectFit = 'contain';
-                img.style.borderRadius = '10px';
-                alert('Logo actualizado correctamente');
-            };
-            
-            img.onerror = function() {
-                alert('No se pudo cargar la imagen desde la URL proporcionada.');
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-            };
-            
-            img.src = logoUrlInput;
         }
 
         // Validación de formulario
@@ -968,39 +1007,70 @@
             return isValid;
         }
 
-        // Inicializar aplicación
+        // Actualizar logo
+        function updateLogo() {
+            const logoContainer = document.getElementById('logoContainer');
+            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
+            
+            if (!logoUrlInput) {
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+                return;
+            }
+            
+            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
+                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
+                return;
+            }
+            
+            const img = new Image();
+            img.onload = function() {
+                logoContainer.innerHTML = '';
+                logoContainer.appendChild(img);
+                img.style.width = '70%';
+                img.style.height = '70%';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '10px';
+                alert('✅ Logo actualizado correctamente');
+            };
+            
+            img.onerror = function() {
+                alert('❌ No se pudo cargar la imagen. Verifica la URL.');
+                logoContainer.innerHTML = '<div class="default-logo">N</div>';
+            };
+            
+            img.src = logoUrlInput;
+        }
+
+        // ============================================
+        // INICIALIZACIÓN DE LA APLICACIÓN
+        // ============================================
+
         document.addEventListener('DOMContentLoaded', async function() {
+            console.log("🎮 Nexus Login inicializando...");
+            
             // Crear fondo animado
             createAnimatedBackground();
             
-            // Inicializar Auth0
-            await initAuth0();
-            
-            // Cargar datos guardados
-            const savedUser = localStorage.getItem('nexus_auth0_user');
-            if (savedUser && !auth0Client) {
-                const user = JSON.parse(savedUser);
+            // Verificar si hay usuario demo
+            const demoUser = localStorage.getItem('nexus_demo_user');
+            if (demoUser) {
+                const user = JSON.parse(demoUser);
                 showDashboard();
-                updateMockProfile(user);
+                updateUserProfile(user);
+                console.log("👤 Usuario demo cargado");
             }
+            
+            // Inicializar Auth0
+            await initializeAuth0();
             
             // Configurar eventos
             document.getElementById('auth0LoginBtn').addEventListener('click', loginWithAuth0);
-            
-            document.getElementById('googleLoginBtn').addEventListener('click', function() {
-                // Para Google, usamos Auth0 también
-                loginWithAuth0();
-            });
+            document.getElementById('googleLoginBtn').addEventListener('click', loginWithAuth0);
             
             document.getElementById('loginForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
                 if (validateForm()) {
-                    const email = document.getElementById('email').value.trim();
-                    const password = document.getElementById('password').value;
-                    const rememberMe = document.getElementById('rememberMe').checked;
-                    
-                    loginWithEmail(email, password);
+                    loginWithAuth0();
                 }
             });
             
@@ -1018,25 +1088,15 @@
             
             document.getElementById('registerLink').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Redirigiendo a registro de Auth0...');
                 loginWithAuth0();
             });
             
             document.getElementById('forgotPassword').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Funcionalidad de recuperación de contraseña - Se abriría el flujo de Auth0');
-                // En producción: auth0Client.passwordlessStart({...})
+                alert("🔐 Recuperación de contraseña\n\nEn Auth0 real, esto abriría el flujo de recuperación.");
             });
             
-            document.getElementById('logoutBtn').addEventListener('click', async function() {
-                if (auth0Client) {
-                    await logout();
-                } else {
-                    // Modo demo
-                    localStorage.removeItem('nexus_auth0_user');
-                    showLogin();
-                }
-            });
+            document.getElementById('logoutBtn').addEventListener('click', logout);
             
             // Validación en tiempo real
             document.getElementById('email').addEventListener('input', function() {
@@ -1072,44 +1132,44 @@
                 }
             });
             
-            console.log('✅ Nexus Login con Auth0 listo');
-            console.log('⚠️  Recuerda configurar tus credenciales de Auth0 en auth0Config');
+            console.log("✅ Nexus Login completamente inicializado");
+            console.log("🔧 Modo:", auth0Initialized ? "AUTH0 REAL" : "DEMO");
         });
 
-        // Configuración guiada de Auth0
-        function showAuth0SetupGuide() {
+        // Mostrar guía de configuración
+        function showConfigGuide() {
             console.log(`
-🎯 GUÍA PARA CONFIGURAR AUTH0:
+🎯 GUÍA DE CONFIGURACIÓN AUTH0 PARA GITHUB PAGES:
 
-1. Ve a https://auth0.com y crea una cuenta GRATIS
+1. VERIFICA EN AUTH0 DASHBOARD:
+   - Ve a: https://manage.auth0.com
+   - Aplicación: "Nexus Chat"
+   - Settings → Application URIs:
 
-2. En el dashboard de Auth0:
-   - Crea un nuevo "Application" → "Single Page Web Application"
-   - Nombre: "Nexus Chat"
+2. CONFIGURA ESTAS URLs:
+   ✅ Allowed Callback URLs:
+   https://elsanchez-ok.github.io
 
-3. Configura los settings:
-   - Allowed Callback URLs: ${window.location.origin}
-   - Allowed Logout URLs: ${window.location.origin}
-   - Allowed Web Origins: ${window.location.origin}
+   ✅ Allowed Logout URLs:
+   https://elsanchez-ok.github.io
 
-4. Copia estos valores:
-   - Domain → Reemplaza en auth0Config.domain
-   - Client ID → Reemplaza en auth0Config.clientId
+   ✅ Allowed Web Origins:
+   https://elsanchez-ok.github.io
 
-5. En "Connections" → "Social":
-   - Activa Google, GitHub, etc.
+3. VERIFICA TUS CREDENCIALES:
+   - Domain: ${auth0Config.domain}
+   - Client ID: ${auth0Config.clientId}
 
-6. En "Connections" → "Database":
-   - Activa "Username-Password-Authentication"
+4. ACTIVA CONEXIONES:
+   - Connections → Social → Activa Google
+   - Connections → Database → Activa "Username-Password"
 
-7. ¡Listo! Tu login funcionará con Auth0 real.
+5. ¡LISTO! Recarga esta página.
             `);
-            
-            alert("Consulta la consola (F12) para ver la guía completa de configuración de Auth0");
         }
 
-        // Mostrar guía al cargar
-        setTimeout(showAuth0SetupGuide, 2000);
+        // Mostrar guía después de cargar
+        setTimeout(showConfigGuide, 3000);
     </script>
 </body>
 </html>

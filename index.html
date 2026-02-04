@@ -6,7 +6,7 @@
     <title>Nexus | InfiniHon TECH - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Auth0 SDK para GitHub Pages -->
+    <!-- Auth0 SDK -->
     <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
     <style>
         :root {
@@ -194,11 +194,101 @@
             letter-spacing: 1px;
         }
 
-        /* Formulario */
-        .login-form {
+        /* Botón de Google (Principal) */
+        .google-btn-main {
+            background: linear-gradient(to right, #4285F4, #34A853, #FBBC05, #EA4335);
+            border: none;
+            border-radius: 12px;
+            padding: 18px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 25px 0 15px;
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
             display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .google-btn-main:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.6);
+        }
+
+        .google-btn-main:active {
+            transform: translateY(-1px);
+        }
+
+        .google-btn-main i {
+            font-size: 22px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            color: #4285F4;
+        }
+
+        /* Botón de email/password */
+        .email-btn {
+            background: rgba(10, 14, 23, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .email-btn:hover {
+            background: rgba(21, 27, 41, 0.9);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Separador */
+        .separator {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: var(--text-secondary);
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border), transparent);
+        }
+
+        .separator span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        /* Formulario de email/password */
+        .email-form {
+            display: none;
             flex-direction: column;
             gap: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-group {
@@ -241,89 +331,6 @@
             color: var(--text-secondary);
         }
 
-        /* Botón de Auth0 Login */
-        .auth0-btn {
-            background: linear-gradient(to right, #eb5424, #ff7b4a);
-            border: none;
-            border-radius: 10px;
-            padding: 17px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(235, 84, 36, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .auth0-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(235, 84, 36, 0.6);
-            background: linear-gradient(to right, #ff7b4a, #eb5424);
-        }
-
-        /* Botón de Google */
-        .google-btn {
-            background: rgba(10, 14, 23, 0.8);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
-            color: var(--text-primary);
-            font-size: 16px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .google-btn:hover {
-            background: rgba(21, 27, 41, 0.9);
-            border-color: var(--accent-blue);
-            transform: translateY(-2px);
-        }
-
-        .google-btn i {
-            color: #4285F4;
-            font-size: 20px;
-        }
-
-        /* Botón de enviar */
-        .submit-btn {
-            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
-            border: none;
-            border-radius: 10px;
-            padding: 17px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 168, 255, 0.6);
-        }
-
-        .submit-btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* Opciones adicionales */
         .form-options {
             display: flex;
             justify-content: space-between;
@@ -354,114 +361,45 @@
             text-decoration: underline;
         }
 
-        /* Separador */
-        .separator {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            color: var(--text-secondary);
-        }
-
-        .separator::before,
-        .separator::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--border), transparent);
-        }
-
-        .separator span {
-            padding: 0 15px;
-            font-size: 14px;
-        }
-
-        /* Enlace de registro */
-        .register-link {
-            text-align: center;
-            margin-top: 25px;
-            color: var(--text-secondary);
-            font-size: 15px;
-        }
-
-        .register-link a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 5px;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-
-        /* Configuración de logo personalizable */
-        .logo-config {
-            background: rgba(10, 14, 23, 0.8);
+        .submit-btn {
+            background: linear-gradient(to right, var(--accent-blue), var(--accent-purple));
+            border: none;
             border-radius: 10px;
-            padding: 15px;
-            margin-top: 25px;
-            border: 1px dashed var(--border);
+            padding: 17px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.4);
         }
 
-        .logo-config-title {
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 168, 255, 0.6);
+        }
+
+        .back-to-options {
+            background: transparent;
+            border: none;
+            color: var(--accent-blue);
             font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 10px;
+            text-align: center;
+            margin-top: 15px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
         }
 
-        .logo-config-input {
-            display: flex;
-            gap: 10px;
-        }
-
-        .logo-url-input {
-            flex: 1;
-            background: rgba(21, 27, 41, 0.8);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 15px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .logo-url-input:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-        }
-
-        .logo-update-btn {
-            background: var(--accent-blue);
-            border: none;
-            border-radius: 8px;
-            padding: 0 15px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .logo-update-btn:hover {
-            background: var(--accent-cyan);
-        }
-
-        /* Mensajes de validación */
-        .validation-message {
-            font-size: 13px;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .validation-message.error {
-            color: var(--accent-red);
-            display: block;
-        }
-
-        .validation-message.success {
-            color: var(--accent-green);
-            display: block;
+        .back-to-options:hover {
+            color: var(--accent-cyan);
+            text-decoration: underline;
         }
 
         /* Dashboard styles */
@@ -475,17 +413,23 @@
         .user-card {
             background: var(--card-bg);
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px 30px;
             margin-top: 20px;
             text-align: center;
             border: 1px solid var(--border);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .user-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
             overflow: hidden;
             border: 3px solid var(--accent-blue);
             box-shadow: var(--neon-glow);
@@ -498,31 +442,69 @@
         }
 
         .user-name {
-            font-size: 24px;
+            font-size: 28px;
             font-family: 'Orbitron', sans-serif;
             margin-bottom: 10px;
             color: var(--accent-cyan);
+            background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .user-email {
             color: var(--text-secondary);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+        .user-info {
+            background: rgba(10, 14, 23, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            color: var(--accent-cyan);
+            font-weight: 500;
         }
 
         .logout-btn {
-            background: var(--accent-red);
+            background: linear-gradient(to right, var(--accent-red), #ff2e43);
             border: none;
             border-radius: 10px;
-            padding: 12px 24px;
+            padding: 14px 28px;
             color: white;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .logout-btn:hover {
-            background: #ff2e43;
             transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
         }
 
         /* Loading spinner */
@@ -534,11 +516,32 @@
             border-radius: 50%;
             border-top-color: var(--accent-blue);
             animation: spin 1s ease-in-out infinite;
-            margin: 20px auto;
+            margin: 30px auto;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        /* Mensajes */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(11, 232, 129, 0.1);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .message.error {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
         }
 
         /* Responsive */
@@ -551,14 +554,12 @@
                 font-size: 28px;
             }
 
-            .form-options {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+            .user-card {
+                padding: 30px 20px;
             }
 
-            .user-card {
-                padding: 20px;
+            .user-name {
+                font-size: 24px;
             }
         }
 
@@ -573,21 +574,22 @@
 
             .logo-placeholder {
                 width: 80px;
-            height: 80px;
+                height: 80px;
             }
 
             .logo-placeholder .default-logo {
                 font-size: 32px;
             }
 
-            .logo-config-input {
-                flex-direction: column;
+            .google-btn-main {
+                padding: 16px;
+                font-size: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Fondo animado con estrellas y partículas -->
+    <!-- Fondo animado con partículas -->
     <div class="particles-background" id="particlesBackground"></div>
 
     <!-- Contenedor del login -->
@@ -606,43 +608,44 @@
             <!-- Loading spinner -->
             <div class="spinner" id="loadingSpinner"></div>
 
-            <!-- Formulario de login -->
-            <form class="login-form" id="loginForm">
-                <!-- Botón Auth0 Login -->
-                <button type="button" class="auth0-btn" id="auth0LoginBtn">
-                    <i class="fas fa-shield-alt"></i>
-                    INICIAR SESIÓN CON AUTH0
+            <!-- Mensajes -->
+            <div class="message" id="message"></div>
+
+            <!-- Opciones de login (Google principal) -->
+            <div id="loginOptions">
+                <!-- Botón Google (Principal) -->
+                <button type="button" class="google-btn-main" id="googleLoginBtn">
+                    <i class="fab fa-google"></i>
+                    Continuar con Google
                 </button>
 
                 <div class="separator">
-                    <span>O continúa con</span>
+                    <span>O</span>
                 </div>
 
-                <!-- Botón de Google -->
-                <button type="button" class="google-btn" id="googleLoginBtn">
-                    <i class="fab fa-google"></i>
-                    Google
+                <!-- Botón Email/Password -->
+                <button type="button" class="email-btn" id="emailLoginBtn">
+                    <i class="fas fa-envelope"></i>
+                    Continuar con Email
                 </button>
+            </div>
 
-                <!-- Campo de email -->
+            <!-- Formulario de email/password -->
+            <form class="email-form" id="emailForm">
                 <div class="form-group">
                     <label class="form-label" for="email">
                         <i class="fas fa-envelope"></i> Correo electrónico
                     </label>
                     <input type="email" id="email" class="form-input" placeholder="tucorreo@ejemplo.com" required>
-                    <div class="validation-message" id="emailValidation"></div>
                 </div>
 
-                <!-- Campo de contraseña -->
                 <div class="form-group">
                     <label class="form-label" for="password">
                         <i class="fas fa-lock"></i> Contraseña
                     </label>
                     <input type="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
-                    <div class="validation-message" id="passwordValidation"></div>
                 </div>
 
-                <!-- Opciones adicionales -->
                 <div class="form-options">
                     <label class="remember-me">
                         <input type="checkbox" id="rememberMe">
@@ -651,27 +654,14 @@
                     <a href="#" class="forgot-password" id="forgotPassword">¿Olvidaste tu contraseña?</a>
                 </div>
 
-                <!-- Botón de enviar -->
                 <button type="submit" class="submit-btn">
                     <i class="fas fa-rocket"></i> INICIAR SESIÓN
                 </button>
+
+                <button type="button" class="back-to-options" id="backToOptions">
+                    <i class="fas fa-arrow-left"></i> Volver a opciones de login
+                </button>
             </form>
-
-            <!-- Configuración de logo personalizable -->
-            <div class="logo-config">
-                <div class="logo-config-title">
-                    <i class="fas fa-image"></i> Configura tu logo (opcional)
-                </div>
-                <div class="logo-config-input">
-                    <input type="url" class="logo-url-input" id="logoUrlInput" placeholder="Pega aquí el enlace de tu imagen">
-                    <button class="logo-update-btn" id="logoUpdateBtn">Actualizar</button>
-                </div>
-            </div>
-
-            <!-- Enlace de registro -->
-            <div class="register-link">
-                ¿No tienes una cuenta? <a href="#" id="registerLink">Regístrate ahora</a>
-            </div>
         </div>
     </div>
 
@@ -693,9 +683,9 @@
             <h2 class="user-name" id="userName">Cargando...</h2>
             <p class="user-email" id="userEmail">cargando@ejemplo.com</p>
             
-            <p style="color: var(--text-secondary); margin-bottom: 30px;">
-                Sesión iniciada exitosamente con Auth0
-            </p>
+            <div class="user-info" id="userInfo">
+                <!-- Información del usuario se llena dinámicamente -->
+            </div>
             
             <button class="logout-btn" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i> CERRAR SESIÓN
@@ -705,29 +695,23 @@
 
     <script>
         // ============================================
-        // CONFIGURACIÓN AUTH0 PARA GITHUB PAGES
+        // CONFIGURACIÓN AUTH0 PARA GOOGLE
         // ============================================
         
-        // Configuración CORREGIDA para GitHub Pages
+        // Configuración de Auth0
         const auth0Config = {
-            domain: "nexus-chat.us.auth0.com",                     // Tu dominio de Auth0
-            clientId: "5l8XLbrInGAb8HvL5hkYIiip40UJsC9K",          // Tu Client ID
-            redirectUri: "https://elsanchez-ok.github.io",         // URL EXACTA de GitHub Pages
-            audience: "https://nexus-chat.us.auth0.com/api/v2/",   // Mismo dominio
+            domain: "nexus-chat.us.auth0.com",
+            clientId: "5l8XLbrInGAb8HvL5hkYIiip40UJsC9K",
+            redirectUri: "https://elsanchez-ok.github.io",
+            audience: "https://nexus-chat.us.auth0.com/api/v2/",
             scope: "openid profile email"
         };
 
-        console.log("🔍 Configuración Auth0 cargada:");
-        console.log("- Dominio:", auth0Config.domain);
-        console.log("- Client ID:", auth0Config.clientId ? "✅ OK" : "❌ Faltante");
-        console.log("- Redirect URI:", auth0Config.redirectUri);
-
-        // Variables globales
+        // Variable global para Auth0
         let auth0Client = null;
-        let auth0Initialized = false;
 
         // ============================================
-        // FUNCIONES PRINCIPALES
+        // FUNCIONES PRINCIPALES AUTH0
         // ============================================
 
         // Inicializar Auth0
@@ -735,13 +719,9 @@
             console.log("🚀 Inicializando Auth0...");
             
             try {
-                // Verificar si el SDK de Auth0 está disponible
+                // Verificar SDK
                 if (typeof createAuth0Client === 'undefined') {
-                    console.error("❌ SDK de Auth0 no cargado. Verifica:");
-                    console.error("1. La CDN está bloqueada");
-                    console.error("2. Conexión a internet");
-                    console.error("3. Usando versión 2.1 del SDK");
-                    throw new Error("SDK de Auth0 no disponible");
+                    throw new Error("SDK de Auth0 no cargado. Verifica la conexión.");
                 }
 
                 // Crear cliente Auth0
@@ -754,16 +734,13 @@
                 });
 
                 console.log("✅ Auth0 inicializado correctamente");
-                auth0Initialized = true;
 
-                // Verificar autenticación
+                // Manejar autenticación
                 await handleAuthentication();
 
             } catch (error) {
                 console.error("❌ Error inicializando Auth0:", error);
-                console.log("🔄 Usando modo DEMO temporal");
-                showDemoWarning();
-                auth0Initialized = false;
+                showMessage("Error de conexión con Auth0. Recarga la página.", "error");
             }
         }
 
@@ -772,36 +749,24 @@
             try {
                 // Verificar si ya está autenticado
                 const isAuthenticated = await auth0Client.isAuthenticated();
-                console.log("🔐 Usuario autenticado:", isAuthenticated);
-
+                
                 if (isAuthenticated) {
-                    // Obtener información del usuario
                     const user = await auth0Client.getUser();
-                    console.log("👤 Usuario:", user);
-                    
-                    // Mostrar dashboard
-                    showDashboard();
-                    updateUserProfile(user);
+                    showDashboard(user);
                     return;
                 }
 
-                // Verificar si hay código de callback (después del redirect)
+                // Verificar callback de redirección
                 const query = window.location.search;
                 if (query.includes("code=") && query.includes("state=")) {
-                    console.log("🔄 Procesando callback de Auth0...");
+                    showLoading(true);
                     
-                    // Manejar el callback
                     await auth0Client.handleRedirectCallback();
-                    
-                    // Limpiar URL
                     window.history.replaceState({}, document.title, "/");
                     
-                    // Obtener usuario
                     const user = await auth0Client.getUser();
-                    
-                    // Mostrar dashboard
-                    showDashboard();
-                    updateUserProfile(user);
+                    showDashboard(user);
+                    showLoading(false);
                 }
 
             } catch (error) {
@@ -809,45 +774,75 @@
             }
         }
 
-        // Login con Auth0
-        async function loginWithAuth0() {
-            if (!auth0Initialized) {
-                console.log("⚠️  Auth0 no inicializado. Usando modo DEMO.");
-                loginWithDemo();
+        // Login con Google (Auth0)
+        async function loginWithGoogle() {
+            if (!auth0Client) {
+                showMessage("Auth0 no está inicializado. Recarga la página.", "error");
                 return;
             }
 
             try {
-                console.log("🔑 Iniciando login con Auth0...");
                 showLoading(true);
+                showMessage("Redirigiendo a Google...", "success");
                 
                 await auth0Client.loginWithRedirect({
-                    redirect_uri: auth0Config.redirectUri
+                    redirect_uri: auth0Config.redirectUri,
+                    connection: "google-oauth2" // Forzar conexión con Google
                 });
                 
             } catch (error) {
-                console.error("❌ Error en login:", error);
+                console.error("❌ Error en login con Google:", error);
                 showLoading(false);
-                alert("Error al iniciar sesión. Verifica la consola (F12).");
+                showMessage("Error al conectar con Google. Intenta de nuevo.", "error");
+            }
+        }
+
+        // Login con email/password (Auth0)
+        async function loginWithEmail(email, password) {
+            if (!auth0Client) {
+                showMessage("Auth0 no está inicializado.", "error");
+                return;
+            }
+
+            try {
+                showLoading(true);
+                
+                // Usar el flujo de recursos del propietario (ROPC)
+                // Nota: Este flujo requiere configuración especial en Auth0
+                showMessage("Esta función requiere configuración adicional en Auth0.", "error");
+                showLoading(false);
+                
+                // Alternativa: Redirigir al login universal de Auth0
+                await auth0Client.loginWithRedirect({
+                    redirect_uri: auth0Config.redirectUri,
+                    screen_hint: "login" // Sugerir pantalla de login
+                });
+                
+            } catch (error) {
+                console.error("❌ Error en login con email:", error);
+                showLoading(false);
+                showMessage("Error en autenticación. Usa Google en su lugar.", "error");
             }
         }
 
         // Logout
         async function logout() {
-            if (auth0Initialized && auth0Client) {
-                try {
-                    showLoading(true);
+            try {
+                showLoading(true);
+                
+                if (auth0Client) {
                     await auth0Client.logout({
                         returnTo: auth0Config.redirectUri
                     });
-                } catch (error) {
-                    console.error("Error en logout:", error);
-                    showLoading(false);
+                } else {
+                    // Fallback
+                    window.location.href = auth0Config.redirectUri;
                 }
-            } else {
-                // Modo demo - limpiar localStorage
-                localStorage.removeItem('nexus_demo_user');
-                showLogin();
+                
+            } catch (error) {
+                console.error("❌ Error en logout:", error);
+                showLoading(false);
+                showMessage("Error al cerrar sesión. Recarga la página.", "error");
             }
         }
 
@@ -856,10 +851,14 @@
         // ============================================
 
         // Mostrar dashboard
-        function showDashboard() {
+        function showDashboard(user) {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('dashboardContainer').style.display = 'block';
             showLoading(false);
+            
+            if (user) {
+                updateUserProfile(user);
+            }
         }
 
         // Mostrar login
@@ -867,6 +866,7 @@
             document.getElementById('loginContainer').style.display = 'flex';
             document.getElementById('dashboardContainer').style.display = 'none';
             showLoading(false);
+            hideMessage();
         }
 
         // Mostrar/ocultar loading
@@ -874,57 +874,71 @@
             document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
         }
 
+        // Mostrar mensaje
+        function showMessage(text, type = "info") {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+        }
+
+        // Ocultar mensaje
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
         // Actualizar perfil del usuario
         function updateUserProfile(user) {
             if (!user) return;
             
-            document.getElementById('userName').textContent = user.name || user.nickname || "Usuario";
+            // Información básica
+            document.getElementById('userName').textContent = user.name || user.nickname || "Usuario Nexus";
             document.getElementById('userEmail').textContent = user.email || "No disponible";
             
-            // Actualizar avatar si existe
+            // Avatar
             const avatarImage = document.getElementById('avatarImage');
             if (user.picture) {
                 avatarImage.src = user.picture;
                 avatarImage.style.display = "block";
             } else {
+                // Avatar por defecto con iniciales
                 avatarImage.style.display = "none";
+                document.querySelector('.user-avatar').innerHTML = 
+                    `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg, var(--accent-blue), var(--accent-purple));color:white;font-size:48px;font-weight:bold;">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>`;
             }
-        }
-
-        // ============================================
-        // MODO DEMO (fallback)
-        // ============================================
-
-        function loginWithDemo() {
-            showLoading(true);
             
-            setTimeout(() => {
-                const demoUser = {
-                    name: "Usuario Demo",
-                    email: "demo@nexus.com",
-                    picture: null
-                };
-                
-                // Guardar en localStorage
-                localStorage.setItem('nexus_demo_user', JSON.stringify(demoUser));
-                
-                // Mostrar dashboard
-                showDashboard();
-                updateUserProfile(demoUser);
-                showLoading(false);
-                
-                alert("🎮 Modo DEMO activado\n\nPara usar Auth0 real:\n1. Verifica tu dominio en Auth0\n2. Configura las URLs de callback\n3. Recarga la página");
-            }, 1000);
+            // Información adicional
+            const userInfoEl = document.getElementById('userInfo');
+            userInfoEl.innerHTML = `
+                <div class="info-item">
+                    <span class="info-label">Proveedor:</span>
+                    <span class="info-value">${user.sub?.includes('google') ? 'Google' : 'Auth0'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">ID:</span>
+                    <span class="info-value">${user.sub?.substring(0, 12) || 'N/A'}...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email verificado:</span>
+                    <span class="info-value">${user.email_verified ? '✅ Sí' : '❌ No'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Última actualización:</span>
+                    <span class="info-value">${new Date().toLocaleDateString('es-ES')}</span>
+                </div>
+            `;
         }
 
-        function showDemoWarning() {
-            console.warn("⚠️  AUTH0 EN MODO DEMO");
-            console.warn("Para usar Auth0 real:");
-            console.warn("1. Ve a manage.auth0.com");
-            console.warn("2. Configura las URLs:");
-            console.warn("   - Callback: " + auth0Config.redirectUri);
-            console.warn("   - Logout: " + auth0Config.redirectUri);
-            console.warn("   - Origins: " + auth0Config.redirectUri);
+        // Alternar entre formularios
+        function showEmailForm() {
+            document.getElementById('loginOptions').style.display = 'none';
+            document.getElementById('emailForm').style.display = 'flex';
+        }
+
+        function showLoginOptions() {
+            document.getElementById('loginOptions').style.display = 'block';
+            document.getElementById('emailForm').style.display = 'none';
+            hideMessage();
         }
 
         // ============================================
@@ -935,7 +949,6 @@
         function createAnimatedBackground() {
             const container = document.getElementById('particlesBackground');
             
-            // Crear estrellas
             for (let i = 0; i < 150; i++) {
                 const star = document.createElement('div');
                 star.classList.add('star');
@@ -954,7 +967,6 @@
                 container.appendChild(star);
             }
             
-            // Crear partículas
             for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
@@ -976,71 +988,6 @@
             }
         }
 
-        // Validación de formulario
-        function validateForm() {
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            let isValid = true;
-            
-            const emailValidation = document.getElementById('emailValidation');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            
-            if (!emailRegex.test(email)) {
-                emailValidation.textContent = 'Por favor, ingresa un email válido';
-                emailValidation.className = 'validation-message error';
-                isValid = false;
-            } else {
-                emailValidation.className = 'validation-message success';
-                emailValidation.textContent = 'Email válido';
-            }
-            
-            const passwordValidation = document.getElementById('passwordValidation');
-            if (password.length < 6) {
-                passwordValidation.textContent = 'La contraseña debe tener al menos 6 caracteres';
-                passwordValidation.className = 'validation-message error';
-                isValid = false;
-            } else {
-                passwordValidation.className = 'validation-message success';
-                passwordValidation.textContent = 'Contraseña válida';
-            }
-            
-            return isValid;
-        }
-
-        // Actualizar logo
-        function updateLogo() {
-            const logoContainer = document.getElementById('logoContainer');
-            const logoUrlInput = document.getElementById('logoUrlInput').value.trim();
-            
-            if (!logoUrlInput) {
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-                return;
-            }
-            
-            if (!logoUrlInput.startsWith('http://') && !logoUrlInput.startsWith('https://')) {
-                alert('Por favor, ingresa una URL válida que comience con http:// o https://');
-                return;
-            }
-            
-            const img = new Image();
-            img.onload = function() {
-                logoContainer.innerHTML = '';
-                logoContainer.appendChild(img);
-                img.style.width = '70%';
-                img.style.height = '70%';
-                img.style.objectFit = 'contain';
-                img.style.borderRadius = '10px';
-                alert('✅ Logo actualizado correctamente');
-            };
-            
-            img.onerror = function() {
-                alert('❌ No se pudo cargar la imagen. Verifica la URL.');
-                logoContainer.innerHTML = '<div class="default-logo">N</div>';
-            };
-            
-            img.src = logoUrlInput;
-        }
-
         // ============================================
         // INICIALIZACIÓN DE LA APLICACIÓN
         // ============================================
@@ -1051,125 +998,84 @@
             // Crear fondo animado
             createAnimatedBackground();
             
-            // Verificar si hay usuario demo
-            const demoUser = localStorage.getItem('nexus_demo_user');
-            if (demoUser) {
-                const user = JSON.parse(demoUser);
-                showDashboard();
-                updateUserProfile(user);
-                console.log("👤 Usuario demo cargado");
-            }
-            
             // Inicializar Auth0
             await initializeAuth0();
             
             // Configurar eventos
-            document.getElementById('auth0LoginBtn').addEventListener('click', loginWithAuth0);
-            document.getElementById('googleLoginBtn').addEventListener('click', loginWithAuth0);
+            document.getElementById('googleLoginBtn').addEventListener('click', loginWithGoogle);
             
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
+            document.getElementById('emailLoginBtn').addEventListener('click', showEmailForm);
+            
+            document.getElementById('backToOptions').addEventListener('click', showLoginOptions);
+            
+            document.getElementById('emailForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (validateForm()) {
-                    loginWithAuth0();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                
+                if (email && password.length >= 6) {
+                    loginWithEmail(email, password);
+                } else {
+                    showMessage("Por favor, ingresa un email válido y contraseña (mínimo 6 caracteres)", "error");
                 }
-            });
-            
-            document.getElementById('logoUpdateBtn').addEventListener('click', function(e) {
-                e.preventDefault();
-                updateLogo();
-            });
-            
-            document.getElementById('logoUrlInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    updateLogo();
-                }
-            });
-            
-            document.getElementById('registerLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                loginWithAuth0();
             });
             
             document.getElementById('forgotPassword').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert("🔐 Recuperación de contraseña\n\nEn Auth0 real, esto abriría el flujo de recuperación.");
+                showMessage("Redirigiendo a recuperación de contraseña...", "success");
+                // En Auth0 real, redirigir al flujo de recuperación
+                setTimeout(() => {
+                    showMessage("Esta función requiere configuración en Auth0 Dashboard.", "error");
+                }, 1500);
             });
             
             document.getElementById('logoutBtn').addEventListener('click', logout);
             
-            // Validación en tiempo real
-            document.getElementById('email').addEventListener('input', function() {
-                const email = this.value.trim();
-                const validation = document.getElementById('emailValidation');
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                
-                if (email.length > 0 && !emailRegex.test(email)) {
-                    validation.textContent = 'Por favor, ingresa un email válido';
-                    validation.className = 'validation-message error';
-                } else if (email.length > 0 && emailRegex.test(email)) {
-                    validation.textContent = 'Email válido';
-                    validation.className = 'validation-message success';
-                } else {
-                    validation.textContent = '';
-                    validation.className = 'validation-message';
-                }
-            });
-            
-            document.getElementById('password').addEventListener('input', function() {
-                const password = this.value;
-                const validation = document.getElementById('passwordValidation');
-                
-                if (password.length > 0 && password.length < 6) {
-                    validation.textContent = 'La contraseña debe tener al menos 6 caracteres';
-                    validation.className = 'validation-message error';
-                } else if (password.length >= 6) {
-                    validation.textContent = 'Contraseña válida';
-                    validation.className = 'validation-message success';
-                } else {
-                    validation.textContent = '';
-                    validation.className = 'validation-message';
-                }
-            });
-            
-            console.log("✅ Nexus Login completamente inicializado");
-            console.log("🔧 Modo:", auth0Initialized ? "AUTH0 REAL" : "DEMO");
+            console.log("✅ Nexus Login inicializado");
+            console.log("🔗 Usando Auth0 con Google OAuth");
         });
 
-        // Mostrar guía de configuración
-        function showConfigGuide() {
+        // Mostrar guía de configuración de Google en Auth0
+        setTimeout(() => {
             console.log(`
-🎯 GUÍA DE CONFIGURACIÓN AUTH0 PARA GITHUB PAGES:
+🔧 CONFIGURACIÓN DE GOOGLE EN AUTH0:
 
-1. VERIFICA EN AUTH0 DASHBOARD:
-   - Ve a: https://manage.auth0.com
-   - Aplicación: "Nexus Chat"
-   - Settings → Application URIs:
+1. Ve a tu Dashboard de Auth0:
+   https://manage.auth0.com
 
-2. CONFIGURA ESTAS URLs:
-   ✅ Allowed Callback URLs:
-   https://elsanchez-ok.github.io
+2. En la barra lateral, ve a:
+   "Connections" → "Social"
 
-   ✅ Allowed Logout URLs:
-   https://elsanchez-ok.github.io
+3. Haz clic en "Google" (o "Create Connection" si no está)
 
-   ✅ Allowed Web Origins:
-   https://elsanchez-ok.github.io
+4. Configura las credenciales de Google:
+   - Necesitas un proyecto en Google Cloud Console
+   - Crea credenciales OAuth 2.0
+   - Client ID y Client Secret de Google
 
-3. VERIFICA TUS CREDENCIALES:
-   - Domain: ${auth0Config.domain}
-   - Client ID: ${auth0Config.clientId}
+5. En Auth0, ingresa:
+   - Client ID: [Tu Client ID de Google]
+   - Client Secret: [Tu Client Secret de Google]
 
-4. ACTIVA CONEXIONES:
-   - Connections → Social → Activa Google
-   - Connections → Database → Activa "Username-Password"
+6. Configura los dominios autorizados:
+   - https://nexus-chat.us.auth0.com
+   - https://elsanchez-ok.github.io
 
-5. ¡LISTO! Recarga esta página.
+7. Guarda y activa la conexión.
+
+8. En tu aplicación Auth0:
+   - Ve a "Connections" de tu aplicación
+   - Activa "Google" en las conexiones disponibles
+
+9. ¡Listo! El login con Google funcionará.
             `);
-        }
-
-        // Mostrar guía después de cargar
-        setTimeout(showConfigGuide, 3000);
+            
+            // Mostrar alerta amigable
+            const hasGoogle = confirm("🔐 Configura Google en Auth0\n\nPara que el login con Google funcione, necesitas configurar Google OAuth en tu dashboard de Auth0.\n\n¿Quieres ver las instrucciones detalladas en la consola? (F12 → Console)");
+            if (hasGoogle) {
+                console.log("📖 Abre la consola (F12) para ver las instrucciones paso a paso");
+            }
+        }, 3000);
     </script>
 </body>
 </html>
